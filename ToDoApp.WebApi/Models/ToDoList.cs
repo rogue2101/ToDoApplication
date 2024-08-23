@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoApp.WebApi.Models;
 
+[Table("ToDo")]
 public partial class ToDoList
 {
     public int Id { get; set; }
