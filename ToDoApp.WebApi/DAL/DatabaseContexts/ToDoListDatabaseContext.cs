@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using ToDoApp.WebApi.DAL.Entities;
 
-namespace ToDoApp.WebApi.Models;
+namespace ToDo.WebApi.DAL.DatabaseContexts;
 
 public partial class ToDoListDatabaseContext : DbContext
 {
@@ -15,5 +16,5 @@ public partial class ToDoListDatabaseContext : DbContext
     {
     }
 
-    public virtual DbSet<ToDoList> ToDos { get; set; }
+    public virtual DbSet<ToDoEntity> ToDos { get; set; }
 }

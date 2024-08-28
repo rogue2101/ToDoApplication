@@ -1,122 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ToDoApp.WebApi.Models;
+using ToDo.WebApi.DAL.DatabaseContexts;
+using ToDo.WebApi.Services.Interfaces;
+using ToDoApp.WebApi.ApiResponse;
+using ToDoApp.WebApi.Models.RequestModel;
+using ToDoApp.WebApi.Models.ResponseModel;
+using ToDoApp.WebApi.Services.Implementations;
 
-namespace ToDoApp.WebApi.Controllers
+namespace DAL.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ToDoController : ControllerBase
     {
-        private readonly ToDoListDatabaseContext _context;
+        private readonly IToDoService _toDoService;
 
-        public ToDoController(ToDoListDatabaseContext context)
+        public ToDoController(IToDoService toDoServices)
         {
-            _context = context;
+            _toDoService = toDoServices;
         }
-
         // GET: api/ToDoList
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDoList>>> Get()
+        public async Task<ActionResult<List<ToDoResponseModel>>> Get()
         {
-            return await _context.ToDos.ToListAsync();
+            return await _toDoService.GetAsync();
         }
 
-        // GET: api/ToDoList/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ToDoList>> GetById(int id)
+        public async Task<ActionResult<ToDoResponseModel>> GetById(int id)
         {
-            var toDoList = await _context.ToDos.FindAsync(id);
-
-            if (toDoList == null)
-            {
-                return NotFound();
-            }
-
-            return toDoList;
+            return await _toDoService.GetByIdAsync(id);
         }
 
-        // PUT: api/ToDoList/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, ToDoList toDoList)
-        {
-            if (id != toDoList.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(toDoList).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ToDoListExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            
-
-            return NoContent();
-        }
-
-        // POST: api/ToDoList
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ToDoList>> Post(ToDoList toDoList)
+        public async Task<ActionResult<ToDoResponseModel>> Post(ToDoRequestModel toDoRequestModel)
         {
-            _context.ToDos.Add(toDoList);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ToDoListExists(toDoList.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetToDoList", new { id = toDoList.Id }, toDoList);
+            return await _toDoService.PostAsync(toDoRequestModel);
         }
 
-        // DELETE: api/ToDoList/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ToDoResponseModel>> Put(int id, ToDoRequestModel toDoRequestModel)
+        {
+            return await _toDoService.PutAsync(id, toDoRequestModel);
+        }
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var toDoList = await _context.ToDos.FindAsync(id);
-            if (toDoList == null)
-            {
-                return NotFound();
-            }
-
-            _context.ToDos.Remove(toDoList);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await _toDoService.DeleteAsync(id);
         }
 
-        private bool ToDoListExists(int id)
-        {
-            return _context.ToDos.Any(e => e.Id == id);
-        }
     }
 }

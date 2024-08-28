@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ToDoApp.WebApi.Models;
+namespace ToDoApp.WebApi.DAL.Entities;
 
 [Table("ToDo")]
-public partial class ToDoList
+public partial class ToDoEntity
 {
     public int Id { get; set; }
 
