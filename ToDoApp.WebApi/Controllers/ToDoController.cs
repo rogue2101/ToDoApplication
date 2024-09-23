@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ToDo.WebApi.DAL.DatabaseContexts;
 using ToDo.WebApi.Services.Interfaces;
-using ToDoApp.WebApi.ApiResponse;
 using ToDoApp.WebApi.Models.RequestModel;
 using ToDoApp.WebApi.Models.ResponseModel;
-using ToDoApp.WebApi.Services.Implementations;
 
 namespace DAL.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ToDoController : ControllerBase
     {
         private readonly IToDoService _toDoService;

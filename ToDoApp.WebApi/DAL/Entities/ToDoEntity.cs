@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ToDoApp.WebApi.DAL.Entities;
 
 [Table("ToDo")]
-public partial class ToDoEntity
+public class ToDoEntity
 {
     public int Id { get; set; }
 

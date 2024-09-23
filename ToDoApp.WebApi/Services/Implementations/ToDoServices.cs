@@ -47,7 +47,6 @@ namespace ToDoApp.WebApi.Services.Implementations
             ToDoEntity toDo = await _repository.GetByIdAsync(id);
             return _mapper.Map<ToDoResponseModel>(toDo);
         }
-
         public async Task<ActionResult> DeleteAsync(int id)
         {
             bool result = await _repository.DeleteAsync(id);
